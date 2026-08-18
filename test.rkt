@@ -59,7 +59,19 @@ Nombre: Julio Yáñez
 
 #| PARTE H |#
 
+(test
+  ((fold-poly 0 
+	      (lambda (coef deg a) (+ coef deg a)) 
+   (plus 10 2 (plus 3 1 (nullp))))
+   ) 
+  16)
 
+(test
+  ((fold-poly 1 
+	      (lambda (coef deg a) (* coef deg a)) 
+   (plus 10 2 (plus 3 1 (nullp))))
+   ) 
+  60)
 
 #| PARTE I |#
 
