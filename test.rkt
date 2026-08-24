@@ -42,7 +42,7 @@ Nombre: Julio Yáñez
 (test (eval 1 (nullp)) 0)
 (test (eval 3 (plus 4 5 (plus 3 2 (plus 5 0 (nullp))))) 1004)
 (test (eval 2 (plus 10 2 (plus 3 1 (nullp)))) 46)
-(test (eval 4 (plus 15 0 (nulp)) 15))
+(test (eval 4 (plus 15 0 (nulp))) 15)
 (test (eval 3 (plus 7 1 (nullp))) 21)
 
 #| PARTE G |#
