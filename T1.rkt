@@ -1,10 +1,10 @@
 #lang play
 
 #|
-Nombre: 
-¿Utilizó Whiteboard Policy? (SI o NO):
-En caso afirmativo, ¿con quién?:
-¿en qué ejercicio(s)?:
+Nombre: Julio Yáñez
+¿Utilizó Whiteboard Policy? (SI o NO): NO
+En caso afirmativo, ¿con quién?: -
+¿en qué ejercicio(s)?: -
 |#
 
 ;;------------ ;;
@@ -14,32 +14,59 @@ En caso afirmativo, ¿con quién?:
 #| Parte A |#
 
 #|
-<poly> ::= 
+<Poly> ::= (plus <Int> <Int> <Poly>) | (nullp)
+<Int>  ::= ...
 |#
 
 (deftype Poly
-  ;...
+  (plus coef deg rem)
+  (nullp)
   )
-
 
 #| Parte B |#
 
 ;; degree :: Poly -> Integer
-(define (degree poly) '???)
-
+;; Retorna el grado del polinomio
+(define (degree poly)
+  (match poly
+    [(nullp) "El polinomio nulo no tiene grado"]
+    [(plus coef deg rem) (let ([comp deg])
+     (match rem
+       [(nullp) comp]
+       [(plus coef deg rem) (if (> deg comp) 
+				 (degree (plus coef deg rem))
+				 (degree (plus coef comp rem)))])
+     )]
+    )
+   )
 
 #| Parte C |#
 
 ;; coefficient :: Integer Poly -> Integer
-(define (coefficient i poly) '???)
+;; Retorna el coeficiente asociado con el exponente dado
+(define (coefficient i poly)
+  (match poly
+    [(nullp) 0]
+    [(plus coef deg rem) (if (equal? i deg)
+			     coef
+			     (coefficient i rem)
+			     )])
+  )
 
 
 #| Parte D |#
 
 ;; nf? :: Poly -> Boolean
-(define (nf? poly) '???)
-
-
+(define (nf? poly)
+  (match poly
+    [(nullp) #t]
+    [(plus coef deg rem) (let ([comp deg])
+     (match rem
+       [(nullp) #t]
+       [(plus coef deg rem)] (cond
+			    [(zero? deg) (nf? (plus coef comp rem))]
+			    [(<= deg comp) (nf? (plus coef deg rem))]
+			    [else #f]))
 #| Parte E |#
 
 ;; normalize :: Poly -> Poly
@@ -49,7 +76,10 @@ En caso afirmativo, ¿con quién?:
 #| Parte F |#
 
 ;; eval :: Integer Poly -> Integer
-(define (eval val poly) '???)
+(define (eval val poly)
+  (match poly
+    [(nullp) 0]
+    [(poly coef deg rem) (+ (expt (* val coef) deg) (eval val rem))]))
 
 
 #| Parte G |#
