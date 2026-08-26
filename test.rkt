@@ -20,36 +20,36 @@ Nombre: Julio Yáñez
 #| PARTE D |#
 
 (test (nf? (nullp)) #f)
-(test (nf? (plus (4 3 (plus 6 2 (plus 8 1 (nullp)))))) #t)
-(test (nf? (plus 6 9 (plus (4 0 (plus 6 4 (plus 8 0 (nullp))))))) #t)
-(test (nf? (plus (4 3 (plus 6 7 (plus 8 1 (nullp)))))) #f)
-(test (nf? (plus 6 9 (plus (4 0 (plus 6 14 (plus 8 0 (nullp))))))) #f)
+(test (nf? (plus 4 3 (plus 6 2 (plus 8 1 (nullp))))) #t)
+(test (nf? (plus 6 9 (plus 4 8 (plus 6 4 (plus 8 1 (nullp)))))) #t)
+(test (nf? (plus 4 3 (plus 6 7 (plus 8 1 (nullp))))) #f)
+(test (nf? (plus 6 9 (plus 4 0 (plus 6 14 (plus 8 1 (nullp)))))) #f)
+(test (nf? (plus 6 9 (plus 0 8 (plus 6 4 (plus 8 0 (nullp)))))) #f)
 
 #| PARTE E |#
 
 (test (normalize (nullp)) (nullp))
-(test (normalize (plus (4 3 (plus 6 2 (plus 8 1 (nullp))))))
-      (plus (4 3 (plus 6 2 (plus 8 1 (nullp))))))
-(test (normalize (plus 6 9 (plus (4 0 (plus 6 4 (plus 8 0 (nullp)))))))
-      (plus 6 9 (plus (4 0 (plus 6 4 (plus 8 0 (nullp)))))))
-(test (normalize (plus (4 3 (plus 6 7 (plus 8 1 (nullp))))))
-      (plus (6 7 (plus 4 3 (plus 8 1 (nullp))))))
-(test (normalize (plus 6 9 (plus (4 0 (plus 6 14 (plus 8 0 (nullp)))))))
-      (plus 6 14 (plus (4 0 (plus 6 9 (plus 8 0 (nullp)))))))
+(test (normalize (plus 4 3 (plus 6 2 (plus 8 1 (nullp)))))
+      (plus 4 3 (plus 6 2 (plus 8 1 (nullp)))))
+(test (normalize (plus 6 9 (plus 4 0 (plus 6 4 (plus 8 1 (nullp))))))
+      (plus 6 9 (plus 6 4 (plus 8 1 (plus 4 0 (nullp))))))
+(test (normalize (plus 4 3 (plus 6 7 (plus 8 1 (nullp)))))
+      (plus 6 7 (plus 4 3 (plus 8 1 (nullp)))))
+(test (normalize (plus 6 9 (plus 4 0 (plus 6 14 (plus 0 5 (nullp)))))) (plus 6 14 (plus 6 9 (plus 4 0 (nullp)))))
 
 #| PARTE F |#
 
 (test (eval 1 (nullp)) 0)
 (test (eval 3 (plus 4 5 (plus 3 2 (plus 5 0 (nullp))))) 1004)
 (test (eval 2 (plus 10 2 (plus 3 1 (nullp)))) 46)
-(test (eval 4 (plus 15 0 (nulp))) 15)
+(test (eval 4 (plus 15 0 (nullp))) 15)
 (test (eval 3 (plus 7 1 (nullp))) 21)
 
 #| PARTE G |#
 
 (test (map-poly (lambda (c d) (cons (* c 2)) d) 
 		(nullp)) 
-      "No se puede mapear una función al polinomio nulo")
+      (nullp))
 (test (map-poly (lambda (c d) (cons (* c 2)) d) 
 		(plus 10 2 (plus 3 1 (nullp)))) 
       (plus 20 2 (plus 6 1 (nullp))))
@@ -82,7 +82,7 @@ Nombre: Julio Yáñez
 (test (eval2 1 (nullp)) 0)
 (test (eval2 3 (plus 4 5 (plus 3 2 (plus 5 0 (nullp))))) 1004)
 (test (eval2 2 (plus 10 2 (plus 3 1 (nullp)))) 46)
-(test (eval2 4 (plus 15 0 (nulp)) 15))
+(test (eval2 4 (plus 15 0 (nullp))) 15)
 (test (eval2 3 (plus 7 1 (nullp))) 21)
 
 (test (map-poly2 (lambda (c d) (cons (* c 2)) d) 
