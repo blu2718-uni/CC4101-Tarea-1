@@ -29,7 +29,7 @@ En caso afirmativo, ¿con quién?: -
 ;; Retorna el grado del polinomio
 (define (degree poly)
   (match poly
-    [(nullp) "El polinomio nulo no tiene grado"]
+    [(nullp) (error "El polinomio nulo no tiene grado")]
     [(plus coef deg rem) (let ([comp deg])
      (match rem
        [(nullp) comp]
@@ -59,39 +59,56 @@ En caso afirmativo, ¿con quién?: -
 ;; nf? :: Poly -> Boolean
 (define (nf? poly)
   (match poly
-    [(nullp) #t]
-    [(plus coef deg rem) (let ([comp deg])
-     (match rem
-       [(nullp) #t]
-       [(plus coef deg rem)] (cond
-			    [(zero? deg) (nf? (plus coef comp rem))]
-			    [(<= deg comp) (nf? (plus coef deg rem))]
-			    [else #f]))
+    [(nullp) #f]
+    [(plus 0 _ _) #f]
+    [(plus c d r) (let ([comp (match r [(nullp) -1] [(plus _ d _) d])])
+			(cond
+			  [(eq? comp -1) #t]
+			  [(<= comp d) (nf? r)]
+			  [else #f]))]))
 #| Parte E |#
 
 ;; normalize :: Poly -> Poly
-(define (normalize poly) '???)
-
-
+(define (normalize poly)
+  (match poly
+    [(nullp) (nullp)]
+    [(plus 0 _ r) (normalize r)]
+    [(plus c d (nullp)) (plus c d (nullp))]
+    [(plus c d r) (let* ([comp (match r [(plus c d r) (list c d r)])]
+			 [result (cond
+				   [(<= (list-ref comp 1) d) (plus c d (normalize r))]
+				   [else (plus (list-ref comp 0) 
+					       (list-ref comp 1) 
+					       (normalize (plus c d (list-ref comp 2))))])])
+		    (if (nf? result) 
+			result
+			(normalize result)))]))
+			     
 #| Parte F |#
 
 ;; eval :: Integer Poly -> Integer
 (define (eval val poly)
   (match poly
     [(nullp) 0]
-    [(poly coef deg rem) (+ (expt (* val coef) deg) (eval val rem))]))
+    [(plus coef deg rem) (+ (* coef (expt val deg)) (eval val rem))]))
 
 
 #| Parte G |#
 
 ;; map-poly :: (Integer Integer -> Integer * Integer) Poly -> Poly
-(define (map-poly f poly) '???)
+(define (map-poly f poly)
+  (match poly
+    [(nullp) (nullp)]
+    [(plus coef deg rem) (let ([res (f coef deg)])
+			   (plus (car res) (cdr res) (map-poly f rem)))]))
 
 
 #| Parte H |#
 
 ;; fold-poly :: A (Integer Integer A -> A) -> (Poly -> A)
-(define (fold-poly default f) '???)
+(define (fold-poly default f)
+  
+  )
 
 
 #| Parte I |#
