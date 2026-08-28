@@ -107,10 +107,10 @@ En caso afirmativo, ¿con quién?: -
 
 ;; fold-poly :: A (Integer Integer A -> A) -> (Poly -> A)
 (define (fold-poly a f)
-  (lambda (poly) (match poly
-		    [(nullp) a]
-		    [(plus c d r) (let ([next-a (f c d a)])
-				    ((fold-poly next-a f) r))])))
+  (lambda (poly)
+    (match poly
+      [(nullp) a]
+      [(plus c d r) (f c d ((fold-poly a f) r))])))
 
 #| Parte I |#
 
@@ -126,5 +126,9 @@ En caso afirmativo, ¿con quién?: -
 			      ((fold-poly 0 (lambda (c d a) ((* (expt val d) c)))) poly))
 
 ;; map-poly2 :: (Integer Integer -> Integer * Integer) Poly -> Poly
-(define (map-poly2 f poly) 
-  ((fold-poly (nullp) (lambda (c d) (f c d))) poly))
+(define (map-poly2 f poly)
+  ((fold-poly (nullp)
+              (lambda (c d acc)
+                (let ([res (f c d)])
+                  (plus (car res) (cdr res) acc))))
+   poly))
