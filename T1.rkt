@@ -30,12 +30,12 @@ En caso afirmativo, ¿con quién?: -
 (define (degree poly)
   (match poly
     [(nullp) (error "El polinomio nulo no tiene grado")]
-    [(plus coef deg rem) (let ([comp deg])
-     (match rem
+    [(plus c d r) (let ([comp d])
+     (match r
        [(nullp) comp]
-       [(plus coef deg rem) (if (> deg comp) 
-				 (degree (plus coef deg rem))
-				 (degree (plus coef comp rem)))])
+       [(plus c d r) (if (> d comp) 
+				 (degree (plus c d r))
+				 (degree (plus c comp r)))])
      )]
     )
    )
@@ -47,9 +47,9 @@ En caso afirmativo, ¿con quién?: -
 (define (coefficient i poly)
   (match poly
     [(nullp) 0]
-    [(plus coef deg rem) (if (equal? i deg)
-			     coef
-			     (coefficient i rem)
+    [(plus c d r) (if (equal? i d)
+			     c
+			     (coefficient i r)
 			     )])
   )
 
@@ -99,25 +99,32 @@ En caso afirmativo, ¿con quién?: -
 (define (map-poly f poly)
   (match poly
     [(nullp) (nullp)]
-    [(plus coef deg rem) (let ([res (f coef deg)])
-			   (plus (car res) (cdr res) (map-poly f rem)))]))
+    [(plus c d r) (let ([res (f c d)])
+			   (plus (car res) (cdr res) (map-poly f r)))]))
 
 
 #| Parte H |#
 
 ;; fold-poly :: A (Integer Integer A -> A) -> (Poly -> A)
-(define (fold-poly default f)
-  
-  )
-
+(define (fold-poly a f)
+  (lambda (poly) (match poly
+		    [(nullp) a]
+		    [(plus c d r) (let ([next-a (f c d a)])
+				    ((fold-poly next-a f) r))])))
 
 #| Parte I |#
 
 ;; coefficient2 :: Integer Poly -> Integer
-(define (coefficient2 i poly) '???)
+(define (coefficient2 i poly) 
+  ((fold-poly 0 (lambda (c d a) (cond
+				  [(not (zero? a)) a]
+				  [(equal? i d) c]
+				    [else 0]))) poly))
 
 ;; eval2 :: Integer Poly -> Integer
-(define (eval2 val poly) '???)
+(define (eval2 val poly)
+			      ((fold-poly 0 (lambda (c d a) ((* (expt val d) c)))) poly))
 
 ;; map-poly2 :: (Integer Integer -> Integer * Integer) Poly -> Poly
-(define (map-poly2 f poly) '???)
+(define (map-poly2 f poly) 
+  ((fold-poly (nullp) (lambda (c d) (f c d))) poly))

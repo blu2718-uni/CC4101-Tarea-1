@@ -6,7 +6,7 @@ Nombre: Julio Yáñez
 
 #| PARTE B |#
 
-(test (degree (nullp)) "El polinomio nulo no tiene grado")
+(test/exn (degree (nullp)) "El polinomio nulo no tiene grado")
 (test (degree (plus 3 0 (nullp))) 0)
 (test (degree (plus 3 1 (nullp))) 1)
 (test (degree (plus 4 5 (plus 3 2 (plus 5 0 (nullp))))) 5)
@@ -47,31 +47,24 @@ Nombre: Julio Yáñez
 
 #| PARTE G |#
 
-(test (map-poly (lambda (c d) (cons (* c 2)) d) 
-		(nullp)) 
+(test (map-poly (lambda (c d) (cons (* c 2) d)) 
+		(nullp)
+		) 
       (nullp))
-(test (map-poly (lambda (c d) (cons (* c 2)) d) 
-		(plus 10 2 (plus 3 1 (nullp)))) 
+(test (map-poly (lambda (c d) (cons (* c 2) d)) 
+		(plus 10 2 (plus 3 1 (nullp)))
+		) 
       (plus 20 2 (plus 6 1 (nullp))))
-(test (map-poly (lambda (c d) (cons (+ c 2)) d) 
-		(plus 10 2 (plus 3 1 (nullp)))) 
+(test (map-poly (lambda (c d) (cons (+ c 2) d)) 
+		(plus 10 2 (plus 3 1 (nullp)))
+		) 
       (plus 12 2 (plus 5 1 (nullp))))
 
 #| PARTE H |#
 
-(test
-  ((fold-poly 0 
-	      (lambda (coef deg a) (+ coef deg a)) 
-   (plus 10 2 (plus 3 1 (nullp))))
-   ) 
-  16)
+(test ((fold-poly 0 (lambda (coef deg a) (+ coef deg a))) (plus 10 2 (plus 3 1 (nullp)))) 16)
 
-(test
-  ((fold-poly 1 
-	      (lambda (coef deg a) (* coef deg a)) 
-   (plus 10 2 (plus 3 1 (nullp))))
-   ) 
-  60)
+(test ((fold-poly 1 (lambda (coef deg a) (* coef deg a))) (plus 10 2 (plus 3 1 (nullp)))) 60)
 
 #| PARTE I |#
 
@@ -87,7 +80,7 @@ Nombre: Julio Yáñez
 
 (test (map-poly2 (lambda (c d) (cons (* c 2)) d) 
 		(nullp)) 
-      "No se puede mapear una función al polinomio nulo")
+      0)
 (test (map-poly2 (lambda (c d) (cons (* c 2)) d) 
 		(plus 10 2 (plus 3 1 (nullp)))) 
       (plus 20 2 (plus 6 1 (nullp))))
